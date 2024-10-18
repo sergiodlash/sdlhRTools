@@ -23,9 +23,9 @@ Happy plotting!
 The development version of this package is available to install from
 GitHub.
 
-| Type        | Source | Command                                           |
-|-------------|--------|---------------------------------------------------|
-| Development | GitHub | `remotes::install_github(sergiodlahs/sdlhRTools)` |
+| Type        | Source | Command                                             |
+|-------------|--------|-----------------------------------------------------|
+| Development | GitHub | `remotes::install_github("sergiodlash/sdlhRTools")` |
 
 Once the installation is complete, you can load the package in your R
 scripts by using:
@@ -62,4 +62,4 @@ ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
   theme_sdlh()
 ```
 
-<img src="man/figures/README-paimio-1.png" width="100%" />
+<img src="man/figures/README-paimio-1.png" width="90%" />
