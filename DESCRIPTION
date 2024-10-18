@@ -1,0 +1,10 @@
+Package: sdlhRTools
+Type: Package
+Title: A collection handy functions and utilities to use for data analysis and data visualization in R.
+Version: 0.1.0
+Authors@R: person("Sergio", "de las Heras", email="sergiodlash.info@gmail.com",
+          role = c("aut", "cre"))
+Description: This package contains functions and utilities that I use frequently in R.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
