@@ -1,50 +1,65 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# sdlhRTools
+# sdlhRTools: Personal package with custom functions for data visualization and analysis.
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of sdlhRTools is to …
+The R package *sdlhRTools* aims to collect in a single place auxiliary
+functions and customized data visualization tools that I use frequently
+when working with R. This package was born with the intention of
+personal use, but I try to keep and mantain a consistent and
+comprehensive documentation.
 
-## Installation
+This is work continuously changing and under development. I welcome
+feedback, contributions and suggestions from users who may find anything
+useful here.
 
-You can install the development version of sdlhRTools from
-[GitHub](https://github.com/) with:
+Happy plotting!
 
-``` r
-# install.packages("pak")
-pak::pak("sergiodlash/sdlhRTools")
-```
+# Installation
 
-## Example
+The development version of this package is available to install from
+GitHub.
 
-This is a basic example which shows you how to solve a common problem:
+| Type        | Source | Command                                           |
+|-------------|--------|---------------------------------------------------|
+| Development | GitHub | `remotes::install_github(sergiodlahs/sdlhRTools)` |
+
+Once the installation is complete, you can load the package in your R
+scripts by using:
 
 ``` r
 library(sdlhRTools)
 #> Loading required package: ggplot2
-## basic example code
+#> Loading required package: see
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+If you encounter any issues or have suggestions, please feel free to
+open an issue on the GitHub repository.
+
+# Examples
+
+## Themes
+
+### sdlh
+
+## Color Palettes
+
+### Paimio Sanatorium
+
+Color palette inspired in the Paimio Sanatorium by architect Alvar Aalto
+in Finland.
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  geom_point() +
+  labs(title = "Scatter Plot of Sepal Length vs Sepal Width",
+       x = "Sepal Length",
+       y = "Sepal Width")+
+  scale_color_paimio(palette = "contrast", reverse = TRUE)+
+  theme_sdlh()
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
+<img src="man/figures/README-paimio-1.png" width="100%" />

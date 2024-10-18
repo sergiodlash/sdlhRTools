@@ -1,16 +1,16 @@
-#' Custom ggplot2 Theme
+#' Custom theme
 #'
 #' This function applies a custom ggplot2 theme with optimized settings.
 #'
 #' @return A ggplot2 theme object
-#' @export
 #'
-#' @import ggplot2
 #'
 #' @examples
 #' ggplot(pressure, aes(temperature,pressure))+
 #' geom_point()+
 #' theme_sdlh()
+#'
+#' @export
 theme_sdlh <- function(){
   theme_minimal()+
     theme(
