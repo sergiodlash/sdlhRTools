@@ -1,7 +1,9 @@
 #' Raincloud plot with stats
 #'
-#' This function creates a custom raincloud plot, which is a combination of a half violin plot and a dotplot.
-#' It is useful for visualizing the distribution of data with both density (violin) and individual data points (dotplot).
+#' This function creates a custom raincloud plot, which is a combination of a
+#' half violin plot and a dotplot.
+#' It is useful for visualizing the distribution of data with both density
+#' (violin) and individual data points (dotplot).
 #'
 #' @return A ggplot2 layer
 #' @export
@@ -10,7 +12,7 @@
 #' @import see
 #'
 geom_raincloud <- function(mapping = NULL,
-                           color_fill = 'lightgreen',
+                           color_fill = "lightgreen",
                            side = c("left", "right"),
                            violin_linewidth = 0,
                            violin_alpha = 1,
@@ -21,7 +23,6 @@ geom_raincloud <- function(mapping = NULL,
                            quartile_linewidth = 1,
                            fun = median,
                            marker_size = 0.3) {
-
   side <- match.arg(side)
 
   nudge_value <- if (side == "left") -nudge_value else nudge_value

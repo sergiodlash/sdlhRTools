@@ -1,20 +1,20 @@
 #' Paimio Sanatorium Color Palette
 #'
-#' This color palette is based on the colors from the Paimio Sanatorium (\url{https://paimiosanatorium.com/}]
-#' by architect Alvar Aalto.
+#' This color palette is based on the colors from the Paimio Sanatorium
+#' (\url{https://paimiosanatorium.com/}] by architect Alvar Aalto.
 #'
 #'
 #' @export
-scale_color_paimio <- function(palette="full",
-                                 discrete = TRUE,
-                                 reverse = FALSE,
-                                 aesthetics = "color",
-                                 ...){
+scale_color_paimio <- function(palette = "full",
+                               discrete = TRUE,
+                               reverse = FALSE,
+                               aesthetics = "color",
+                               ...) {
   pal <- palette_paimio(palette = palette, reverse = reverse)
 
-  if(discrete){
+  if (discrete) {
     discrete_scale(aesthetics = aesthetics, palette = pal, ...)
-  } else{
+  } else {
     scale_color_gradientn(colours = pal(256), aesthetics = aesthetics)
   }
 }
@@ -27,10 +27,10 @@ scale_color_paimio <- function(palette="full",
 #' @rdname scale_color_paimio
 #' @export
 scale_color_paimio_d <- function(palette = "full",
-                               discrete = TRUE,
-                               reverse = FALSE,
-                               aesthetics = "color",
-                               ...) {
+                                 discrete = TRUE,
+                                 reverse = FALSE,
+                                 aesthetics = "color",
+                                 ...) {
   scale_color_paimio(
     palette = palette,
     discrete = discrete,
@@ -43,10 +43,10 @@ scale_color_paimio_d <- function(palette = "full",
 #' @rdname scale_color_paimio
 #' @export
 scale_color_paimio_c <- function(palette = "full",
-                               discrete = FALSE,
-                               reverse = FALSE,
-                               aesthetics = "color",
-                               ...) {
+                                 discrete = FALSE,
+                                 reverse = FALSE,
+                                 aesthetics = "color",
+                                 ...) {
   scale_color_paimio(
     palette = palette,
     discrete = discrete,
@@ -77,10 +77,10 @@ scale_colour_paimio_d <- scale_color_paimio_d
 #' @rdname scale_color_paimio
 #' @export
 scale_fill_paimio <- function(palette = "full",
-                            discrete = TRUE,
-                            reverse = FALSE,
-                            aesthetics = "fill",
-                            ...) {
+                              discrete = TRUE,
+                              reverse = FALSE,
+                              aesthetics = "fill",
+                              ...) {
   pal <- palette_paimio(palette = palette, reverse = reverse)
 
   if (discrete) {
@@ -94,10 +94,10 @@ scale_fill_paimio <- function(palette = "full",
 #' @rdname scale_color_paimio
 #' @export
 scale_fill_paimio_d <- function(palette = "full",
-                              discrete = TRUE,
-                              reverse = FALSE,
-                              aesthetics = "fill",
-                              ...) {
+                                discrete = TRUE,
+                                reverse = FALSE,
+                                aesthetics = "fill",
+                                ...) {
   scale_fill_paimio(
     palette = palette,
     discrete = discrete,
@@ -110,10 +110,10 @@ scale_fill_paimio_d <- function(palette = "full",
 #' @rdname scale_color_paimio
 #' @export
 scale_fill_paimio_c <- function(palette = "full",
-                              discrete = FALSE,
-                              reverse = FALSE,
-                              aesthetics = "fill",
-                              ...) {
+                                discrete = FALSE,
+                                reverse = FALSE,
+                                aesthetics = "fill",
+                                ...) {
   scale_fill_paimio(
     palette = palette,
     discrete = discrete,
@@ -146,7 +146,8 @@ paimio_colors_list <- c(
 
 #' Extract Paimio colors as Hex Codes
 #'
-#' Can be used to get the hex code of specific colors from the Paimio Sanatorium color palette.
+#' Can be used to get the hex code of specific colors from the Paimio Sanatorium
+#' color palette.
 #' Use `paimio_colors()` to see all available colors.
 #'
 #' @param ... Names of colors to extract.
@@ -171,7 +172,7 @@ paimio_colors <- function(...) {
 
 paimio_palettes <- list(
   `full` = paimio_colors(),
-  `contrast`= paimio_colors("yellow 1", "dark orange", "green", "paimio blue")
+  `contrast` = paimio_colors("yellow 1", "dark orange", "green", "paimio blue")
 )
 
 
@@ -197,7 +198,10 @@ palette_paimio <- function(palette = "full", reverse = FALSE, ...) {
   if (!palette %in% names(palette_list)) {
     msg <- c(paste0(
       "Palette name not available. `palette` must be one of ",
-      datawizard::text_concatenate(names(palette_list), last = " or ", enclose = "`"),
+      datawizard::text_concatenate(names(palette_list),
+        last = " or ",
+        enclose = "`"
+      ),
       "."
     ), "Using default palette now.")
     insight::format_warning(msg)
@@ -209,5 +213,3 @@ palette_paimio <- function(palette = "full", reverse = FALSE, ...) {
 
   grDevices::colorRampPalette(pal, ...)
 }
-
-
