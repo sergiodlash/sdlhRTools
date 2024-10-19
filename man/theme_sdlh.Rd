@@ -2,7 +2,7 @@
 % Please edit documentation in R/theme_sdlh.R
 \name{theme_sdlh}
 \alias{theme_sdlh}
-\title{Custom theme}
+\title{Custom theme for ggplot}
 \usage{
 theme_sdlh()
 }
@@ -13,8 +13,8 @@ A ggplot2 theme object
 This function applies a custom ggplot2 theme with optimized settings.
 }
 \examples{
-ggplot(pressure, aes(temperature,pressure))+
-geom_point()+
-theme_sdlh()
+ggplot(pressure, aes(temperature, pressure)) +
+  geom_point() +
+  theme_sdlh()
 
 }

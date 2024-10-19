@@ -1,16 +1,15 @@
-#' Paimio Sanatorium Color Palette
+#' Ny Calsberg Glyptotek Color Palette
 #'
-#' This color palette is based on the colors from the Paimio Sanatorium
-#' (\url{https://paimiosanatorium.com/}] by architect Alvar Aalto.
+#' This color palette is based on the colors from the Ny Calrsberg Glyptotek
 #'
 #'
 #' @export
-scale_color_paimio <- function(palette = "full",
+scale_color_glyptotek <- function(palette = "full",
                                discrete = TRUE,
                                reverse = FALSE,
                                aesthetics = "color",
                                ...) {
-  pal <- palette_paimio(palette = palette, reverse = reverse)
+  pal <- palette_glyptotek(palette = palette, reverse = reverse)
 
   if (discrete) {
     discrete_scale(aesthetics = aesthetics, palette = pal, ...)
@@ -24,14 +23,14 @@ scale_color_paimio <- function(palette = "full",
 # Aliases ----------------------------------------------------------------------
 
 
-#' @rdname scale_color_paimio
+#' @rdname scale_color_glyptotek
 #' @export
-scale_color_paimio_d <- function(palette = "full",
+scale_color_glyptotek_d <- function(palette = "full",
                                  discrete = TRUE,
                                  reverse = FALSE,
                                  aesthetics = "color",
                                  ...) {
-  scale_color_paimio(
+  scale_color_glyptotek(
     palette = palette,
     discrete = discrete,
     reverse = reverse,
@@ -40,14 +39,14 @@ scale_color_paimio_d <- function(palette = "full",
   )
 }
 
-#' @rdname scale_color_paimio
+#' @rdname scale_color_glyptotek
 #' @export
-scale_color_paimio_c <- function(palette = "full",
+scale_color_glyptotek_c <- function(palette = "full",
                                  discrete = FALSE,
                                  reverse = FALSE,
                                  aesthetics = "color",
                                  ...) {
-  scale_color_paimio(
+  scale_color_glyptotek(
     palette = palette,
     discrete = discrete,
     reverse = reverse,
@@ -56,17 +55,17 @@ scale_color_paimio_c <- function(palette = "full",
   )
 }
 
-#' @rdname scale_color_paimio
+#' @rdname scale_color_glyptotek
 #' @export
-scale_colour_paimio <- scale_color_paimio
+scale_colour_glyptotek <- scale_color_glyptotek
 
-#' @rdname scale_color_paimio
+#' @rdname scale_color_glyptotek
 #' @export
-scale_colour_paimio_c <- scale_color_paimio_c
+scale_colour_glyptotek_c <- scale_color_glyptotek_c
 
-#' @rdname scale_color_paimio
+#' @rdname scale_color_glyptotek
 #' @export
-scale_colour_paimio_d <- scale_color_paimio_d
+scale_colour_glyptotek_d <- scale_color_glyptotek_d
 
 
 
@@ -74,14 +73,14 @@ scale_colour_paimio_d <- scale_color_paimio_d
 
 
 
-#' @rdname scale_color_paimio
+#' @rdname scale_color_glyptotek
 #' @export
-scale_fill_paimio <- function(palette = "full",
+scale_fill_glyptotek <- function(palette = "full",
                               discrete = TRUE,
                               reverse = FALSE,
                               aesthetics = "fill",
                               ...) {
-  pal <- palette_paimio(palette = palette, reverse = reverse)
+  pal <- palette_glyptotek(palette = palette, reverse = reverse)
 
   if (discrete) {
     discrete_scale(aesthetics = aesthetics, palette = pal, ...)
@@ -91,14 +90,14 @@ scale_fill_paimio <- function(palette = "full",
 }
 
 
-#' @rdname scale_color_paimio
+#' @rdname scale_color_glyptotek
 #' @export
-scale_fill_paimio_d <- function(palette = "full",
+scale_fill_glyptotek_d <- function(palette = "full",
                                 discrete = TRUE,
                                 reverse = FALSE,
                                 aesthetics = "fill",
                                 ...) {
-  scale_fill_paimio(
+  scale_fill_glyptotek(
     palette = palette,
     discrete = discrete,
     reverse = reverse,
@@ -107,14 +106,14 @@ scale_fill_paimio_d <- function(palette = "full",
   )
 }
 
-#' @rdname scale_color_paimio
+#' @rdname scale_color_glyptotek
 #' @export
-scale_fill_paimio_c <- function(palette = "full",
+scale_fill_glyptotek_c <- function(palette = "full",
                                 discrete = FALSE,
                                 reverse = FALSE,
                                 aesthetics = "fill",
                                 ...) {
-  scale_fill_paimio(
+  scale_fill_glyptotek(
     palette = palette,
     discrete = discrete,
     reverse = reverse,
@@ -130,63 +129,56 @@ scale_fill_paimio_c <- function(palette = "full",
 
 
 
-paimio_colors_list <- c(
-  `yellow1` = "#E1D059",
-  `yellow2` = "#EECE5B",
-  `lightOrange` = "#BD7A3B",
-  `darkOrange` = "#B6633E",
-  `green` = "#548665",
-  `paimioBlue` = "#268FA0",
-  `greyGreen` = "#B1C1B0",
-  `grey` = "#E2E1D0",
-  `beige1` = "#CDD1B6",
-  `beige2` = "#D4D2B4"
+glyptotek_colors_list <- c(
+  `steelBlue`= "#1F2D3A",
+  `chestnut` = "#582D24",
+  `caramel` = "#BD8537",
+  `sage` = "#686C5A"
 )
 
 
-#' Extract Paimio colors as Hex Codes
+#' Extract Glyptotek colors as Hex Codes
 #'
-#' Can be used to get the hex code of specific colors from the Paimio Sanatorium
-#' color palette.
-#' Use `paimio_colors()` to see all available colors.
+#' Can be used to get the hex code of specific colors from the Ny Calrsberg
+#' Glyptotek color palette.
+#' Use `glyptotek_colors()` to see all available colors.
 #'
 #' @param ... Names of colors to extract.
 #'
 #' @return A character vector with color codes.
 #'
 #' @examples
-#' paimio_colors()
-#' paimio_colors("paimioBlue", "yellow1")
+#' glyptotek_colors()
+#' glyptotek_colors("glyptotekBlue", "yellow1")
 #'
 #' @export
-paimio_colors <- function(...) {
+glyptotek_colors <- function(...) {
   cols <- c(...)
 
   if (is.null(cols)) {
-    return(paimio_colors_list)
+    return(glyptotek_colors_list)
   }
 
-  paimio_colors_list[cols]
+  glyptotek_colors_list[cols]
 }
 
-paimio_palettes <- list(
-  `full` = paimio_colors(),
-  `contrast` = paimio_colors("yellow1", "darkOrange", "green", "paimioBlue")
+glyptotek_palettes <- list(
+  `full` = glyptotek_colors()
 )
 
 
-#' Paimio Sanatorium color palette
+#' Ny Carlsberg Glyptotek color palette
 #'
 #' @details This function is usually not called directly, but from within
-#' [`scale_color_paimio()`][scale_color_paimio].
+#' [`scale_color_glyptotek()`][scale_color_glyptotek].
 #'
 #' @param palette A string specifying the palette name.
 #' @param reverse Logical, whether to reverse the palette.
 #' @param ... Additional arguments passed to other functions.
 #'
 #' @export
-palette_paimio <- function(palette = "full", reverse = FALSE, ...) {
-  .retrieve_palette(palette, paimio_palettes, reverse = reverse, ...)
+palette_glyptotek <- function(palette = "full", reverse = FALSE, ...) {
+  .retrieve_palette(palette, glyptotek_palettes, reverse = reverse, ...)
 }
 
 

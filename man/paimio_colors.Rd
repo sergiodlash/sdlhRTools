@@ -13,11 +13,12 @@ paimio_colors(...)
 A character vector with color codes.
 }
 \description{
-Can be used to get the hex code of specific colors from the Paimio Sanatorium color palette.
+Can be used to get the hex code of specific colors from the Paimio Sanatorium
+color palette.
 Use `paimio_colors()` to see all available colors.
 }
 \examples{
 paimio_colors()
-paimio_colors("paimio blue", "yellow_1")
+paimio_colors("paimioBlue", "yellow1")
 
 }

@@ -60,8 +60,27 @@ ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
     x = "Sepal Length",
     y = "Sepal Width"
   ) +
-  scale_color_paimio(palette = "contrast", reverse = TRUE) +
+  scale_color_paimio(palette = "full", reverse = TRUE) +
   theme_sdlh()
 ```
 
-<img src="man/figures/README-paimio-1.png" width="90%" />
+<img src="man/figures/README-paimio-1.png" width="90%" /> \### Ny
+Carlsberg Glyptotek
+
+Color palette inspired in the Ny Calrsberg Glyptotek in Copenhagen.
+
+``` r
+ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species, color= Species)) +
+  geom_violin( linewidth = 0) +
+  geom_dotplot(binaxis = 'y', stackdir = 'center', fill = "white", dotsize = 0.8, binwidth = 0.07)+
+  labs(
+    title = "Violin Plot of Sepal Width by Species",
+    x = "Species",
+    y = "Sepal Width"
+  ) +
+  scale_fill_glyptotek()+
+  scale_color_glyptotek()+
+  theme_sdlh()
+```
+
+<img src="man/figures/README-glyptotek-1.png" width="90%" />

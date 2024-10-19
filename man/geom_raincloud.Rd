@@ -23,6 +23,8 @@ geom_raincloud(
 A ggplot2 layer
 }
 \description{
-This function creates a custom raincloud plot, which is a combination of a half violin plot and a dotplot.
-It is useful for visualizing the distribution of data with both density (violin) and individual data points (dotplot).
+This function creates a custom raincloud plot, which is a combination of a
+half violin plot and a dotplot.
+It is useful for visualizing the distribution of data with both density
+(violin) and individual data points (dotplot).
 }
