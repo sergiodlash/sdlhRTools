@@ -11,7 +11,8 @@
 #' @import ggplot2
 #' @import see
 #'
-geom_raincloud <- function(mapping = NULL,
+geom_raincloud <- function(data = NULL,
+                           mapping = NULL,
                            color_fill = "lightgreen",
                            side = c("left", "right"),
                            violin_linewidth = 0,
@@ -30,6 +31,7 @@ geom_raincloud <- function(mapping = NULL,
 
   list(
     geom_violinhalf(
+      data = data,
       mapping = mapping,
       fill = color_fill,
       linewidth = violin_linewidth,
@@ -38,6 +40,7 @@ geom_raincloud <- function(mapping = NULL,
       flip = side == "left"
     ),
     geom_dotplot(
+      data = data,
       mapping = mapping,
       fill = scales::alpha("black", 0),
       binaxis = "y",
@@ -48,6 +51,7 @@ geom_raincloud <- function(mapping = NULL,
       position = position_nudge(nudge_value)
     ),
     stat_summary(
+      data = data,
       mapping = mapping,
       color = color_fill,
       linewidth = quartile_linewidth,

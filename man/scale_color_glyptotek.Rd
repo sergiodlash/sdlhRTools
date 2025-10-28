@@ -85,5 +85,6 @@ scale_fill_glyptotek_c(
 )
 }
 \description{
-This color palette is based on the colors from the Ny Calrsberg Glyptotek
+This color palette is based on the colors from the walls of the Ny Calrsberg
+Glyptotek in Copenhagen, Denmark.
 }

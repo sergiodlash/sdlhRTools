@@ -20,20 +20,17 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
-The R package *sdlhRTools* aims to collect in a single place auxiliary functions and customized data visualization tools that I use frequently when working with R. This package was born with the intention of personal use, but I try to keep and mantain a consistent and comprehensive documentation.
+The R package *sdlhRTools* aims to collect in a single place auxiliary functions and customized data visualization tools that I use frequently when working with R. This package was born with the intention of personal use, but I try to keep and maintain a consistent and comprehensive documentation.
 
 This is work continuously changing and under development. I welcome feedback, contributions and suggestions from users who may find anything useful here.
-
-Happy plotting!
 
 # Installation
 
 The development version of this package is available to install from GitHub.
 
-| Type        | Source | Command                                           |
-|-------------|--------|---------------------------------------------------|
+| Type        | Source | Command                                             |
+|-------------|--------|-----------------------------------------------------|
 | Development | GitHub | `remotes::install_github("sergiodlash/sdlhRTools")` |
-
 
 Once the installation is complete, you can load the package in your R scripts by using:
 
@@ -66,6 +63,7 @@ ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
   scale_color_paimio(palette = "full", reverse = TRUE) +
   theme_sdlh()
 ```
+
 ### Ny Carlsberg Glyptotek
 
 Color palette inspired in the Ny Calrsberg Glyptotek in Copenhagen.
@@ -82,4 +80,10 @@ ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species, color= Species)) 
   scale_fill_glyptotek()+
   scale_color_glyptotek()+
   theme_sdlh()
+```
+
+```{r}
+ggplot(iris, aes(x = Species, y = Sepal.Width, color = Species)) +
+  geom_violinhist()
+
 ```

@@ -5,6 +5,7 @@
 \title{Raincloud plot with stats}
 \usage{
 geom_raincloud(
+  data = NULL,
   mapping = NULL,
   color_fill = "lightgreen",
   side = c("left", "right"),

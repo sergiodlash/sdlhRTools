@@ -189,25 +189,4 @@ palette_paimio <- function(palette = "full", reverse = FALSE, ...) {
   .retrieve_palette(palette, paimio_palettes, reverse = reverse, ...)
 }
 
-
-# helper -----------------------------------------------------------------------
-
-.retrieve_palette <- function(palette, palette_list, reverse = FALSE, ...) {
-  if (!palette %in% names(palette_list)) {
-    msg <- c(paste0(
-      "Palette name not available. `palette` must be one of ",
-      datawizard::text_concatenate(names(palette_list),
-        last = " or ",
-        enclose = "`"
-      ),
-      "."
-    ), "Using default palette now.")
-    insight::format_warning(msg)
-    palette <- 1
-  }
-  pal <- palette_list[[palette]]
-
-  if (reverse) pal <- rev(pal)
-
-  grDevices::colorRampPalette(pal, ...)
-}
+# helper moved to R/utils.R (.retrieve_palette)

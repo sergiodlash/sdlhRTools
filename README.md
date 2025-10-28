@@ -4,6 +4,7 @@
 # sdlhRTools: Personal package with custom functions for data visualization and analysis.
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 The R package *sdlhRTools* aims to collect in a single place auxiliary
@@ -15,8 +16,6 @@ comprehensive documentation.
 This is work continuously changing and under development. I welcome
 feedback, contributions and suggestions from users who may find anything
 useful here.
-
-Happy plotting!
 
 # Installation
 
@@ -32,8 +31,6 @@ scripts by using:
 
 ``` r
 library(sdlhRTools)
-#> Loading required package: ggplot2
-#> Loading required package: see
 ```
 
 If you encounter any issues or have suggestions, please feel free to
@@ -53,6 +50,17 @@ Color palette inspired in the Paimio Sanatorium by architect Alvar Aalto
 in Finland.
 
 ``` r
+library(tidyverse)
+#> ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+#> ✔ dplyr     1.1.4     ✔ readr     2.1.5
+#> ✔ forcats   1.0.0     ✔ stringr   1.5.1
+#> ✔ ggplot2   3.5.2     ✔ tibble    3.2.1
+#> ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+#> ✔ purrr     1.0.4     
+#> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+#> ✖ dplyr::filter() masks stats::filter()
+#> ✖ dplyr::lag()    masks stats::lag()
+#> ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
   geom_point() +
   labs(
@@ -64,8 +72,9 @@ ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
   theme_sdlh()
 ```
 
-<img src="man/figures/README-paimio-1.png" width="90%" /> \### Ny
-Carlsberg Glyptotek
+<img src="man/figures/README-paimio-1.png" width="90%" />
+
+### Ny Carlsberg Glyptotek
 
 Color palette inspired in the Ny Calrsberg Glyptotek in Copenhagen.
 
