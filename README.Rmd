@@ -35,6 +35,7 @@ The development version of this package is available to install from GitHub.
 Once the installation is complete, you can load the package in your R scripts by using:
 
 ```{r}
+library(ggplot2)
 library(sdlhRTools)
 ```
 
@@ -45,6 +46,35 @@ If you encounter any issues or have suggestions, please feel free to open an iss
 ## Themes
 
 ### sdlh
+
+A compact minimal theme with a bottom legend, used throughout the examples below.
+
+```{r sdlh}
+ggplot(pressure, aes(temperature, pressure)) +
+  geom_point() +
+  theme_sdlh()
+```
+
+## Geoms
+
+### Violin hist
+
+The `geom_violinhist` plots a half violin and a histogram to show data distributions.
+
+```{r violinhist}
+ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
+  geom_violinhist(
+    binwidth = 0.3,
+    nudge_value = 0
+  ) +
+  geom_boxplot(
+    width = 0.05
+  ) +
+  geom_jitter(
+    height = 0,
+    width = 0.02
+  )
+```
 
 ## Color Palettes
 
@@ -60,7 +90,7 @@ ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
     x = "Sepal Length",
     y = "Sepal Width"
   ) +
-  scale_color_paimio(palette = "full", reverse = TRUE) +
+  scale_color_paimio(palette = "contrast", reverse = TRUE) +
   theme_sdlh()
 ```
 
@@ -69,21 +99,15 @@ ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
 Color palette inspired in the Ny Calrsberg Glyptotek in Copenhagen.
 
 ```{r glyptotek}
-ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species, color= Species)) +
-  geom_violin( linewidth = 0) +
-  geom_dotplot(binaxis = 'y', stackdir = 'center', fill = "white", dotsize = 0.8, binwidth = 0.07)+
+ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species, color = Species)) +
+  geom_violin(linewidth = 0) +
+  geom_dotplot(binaxis = "y", stackdir = "center", fill = "white", dotsize = 0.8, binwidth = 0.07) +
   labs(
     title = "Violin Plot of Sepal Width by Species",
     x = "Species",
     y = "Sepal Width"
   ) +
-  scale_fill_glyptotek()+
-  scale_color_glyptotek()+
+  scale_fill_glyptotek() +
+  scale_color_glyptotek() +
   theme_sdlh()
-```
-
-```{r}
-ggplot(iris, aes(x = Species, y = Sepal.Width, color = Species)) +
-  geom_violinhist()
-
 ```
