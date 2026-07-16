@@ -12,14 +12,14 @@
 #'
 #' @export
 theme_sdlh <- function() {
-  theme_minimal() +
-    theme(
-      text = element_text(size = 10),
-      plot.margin = margin(0.3, 0.3, 0, 0.3, "cm"),
-      legend.title = element_text(size = 8),
-      legend.text = element_text(size = 7),
+  ggplot2::theme_minimal() +
+    ggplot2::theme(
+      text = ggplot2::element_text(size = 10),
+      plot.margin = ggplot2::margin(0.3, 0.3, 0, 0.3, "cm"),
+      legend.title = ggplot2::element_text(size = 8),
+      legend.text = ggplot2::element_text(size = 7),
       legend.position = "bottom",
       legend.justification = c("right", "bottom"),
-      legend.background = element_rect(fill = "white", linewidth = 0)
+      legend.background = ggplot2::element_rect(fill = "white", linewidth = 0)
     )
 }

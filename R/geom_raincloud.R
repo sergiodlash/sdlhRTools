@@ -7,10 +7,6 @@
 #'
 #' @return A ggplot2 layer
 #' @export
-#'
-#' @import ggplot2
-#' @import see
-#'
 geom_raincloud <- function(data = NULL,
                            mapping = NULL,
                            color_fill = "lightgreen",
@@ -22,7 +18,7 @@ geom_raincloud <- function(data = NULL,
                            stackratio = 1.4,
                            binwidth = 0.5,
                            quartile_linewidth = 1,
-                           fun = median,
+                           fun = stats::median,
                            marker_size = 0.3) {
   side <- match.arg(side)
 
@@ -30,16 +26,16 @@ geom_raincloud <- function(data = NULL,
   stackdir_value <- if (side == "left") "down" else "up"
 
   list(
-    geom_violinhalf(
+    see::geom_violinhalf(
       data = data,
       mapping = mapping,
       fill = color_fill,
       linewidth = violin_linewidth,
       alpha = violin_alpha,
-      position = position_nudge(nudge_value),
+      position = ggplot2::position_nudge(nudge_value),
       flip = side == "left"
     ),
-    geom_dotplot(
+    ggplot2::geom_dotplot(
       data = data,
       mapping = mapping,
       fill = scales::alpha("black", 0),
@@ -48,18 +44,18 @@ geom_raincloud <- function(data = NULL,
       stackdir = stackdir_value,
       stackratio = stackratio,
       binwidth = binwidth,
-      position = position_nudge(nudge_value)
+      position = ggplot2::position_nudge(nudge_value)
     ),
-    stat_summary(
+    ggplot2::stat_summary(
       data = data,
       mapping = mapping,
       color = color_fill,
       linewidth = quartile_linewidth,
-      fun.min = function(z) quantile(z, 0.25),
-      fun.max = function(z) quantile(z, 0.75),
+      fun.min = function(z) stats::quantile(z, 0.25),
+      fun.max = function(z) stats::quantile(z, 0.75),
       fun = fun,
       size = marker_size,
-      position = position_nudge(nudge_value / 2)
+      position = ggplot2::position_nudge(nudge_value / 2)
     )
   )
 }

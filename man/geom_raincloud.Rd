@@ -16,7 +16,7 @@ geom_raincloud(
   stackratio = 1.4,
   binwidth = 0.5,
   quartile_linewidth = 1,
-  fun = median,
+  fun = stats::median,
   marker_size = 0.3
 )
 }
