@@ -39,3 +39,35 @@
 
   grDevices::colorRampPalette(pal, ...)
 }
+
+#' Internal: shared implementation behind `glyptotek_colors()`, `paimio_colors()`, etc.
+#' @noRd
+.extract_colors <- function(colors_list, ...) {
+  cols <- c(...)
+  if (is.null(cols)) return(colors_list)
+  colors_list[cols]
+}
+
+#' Internal: shared engine behind the `scale_color_*()` family
+#' @noRd
+.scale_color_engine <- function(palette_fn, palette, discrete, reverse, aesthetics, ...) {
+  pal <- palette_fn(palette = palette, reverse = reverse)
+
+  if (discrete) {
+    ggplot2::discrete_scale(aesthetics = aesthetics, palette = pal, ...)
+  } else {
+    ggplot2::scale_color_gradientn(colours = pal(256), aesthetics = aesthetics)
+  }
+}
+
+#' Internal: shared engine behind the `scale_fill_*()` family
+#' @noRd
+.scale_fill_engine <- function(palette_fn, palette, discrete, reverse, aesthetics, ...) {
+  pal <- palette_fn(palette = palette, reverse = reverse)
+
+  if (discrete) {
+    ggplot2::discrete_scale(aesthetics = aesthetics, palette = pal, ...)
+  } else {
+    ggplot2::scale_fill_gradientn(colours = pal(256), aesthetics = aesthetics, ...)
+  }
+}

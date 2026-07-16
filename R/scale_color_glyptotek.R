@@ -3,19 +3,14 @@
 #' This color palette is based on the colors from the walls of the Ny Calrsberg
 #' Glyptotek in Copenhagen, Denmark.
 #'
+#' @include utils.R
 #' @export
 scale_color_glyptotek <- function(palette = "full",
                                discrete = TRUE,
                                reverse = FALSE,
                                aesthetics = "color",
                                ...) {
-  pal <- palette_glyptotek(palette = palette, reverse = reverse)
-
-  if (discrete) {
-    discrete_scale(aesthetics = aesthetics, palette = pal, ...)
-  } else {
-    scale_color_gradientn(colours = pal(256), aesthetics = aesthetics)
-  }
+  .scale_color_engine(palette_glyptotek, palette, discrete, reverse, aesthetics, ...)
 }
 
 
@@ -80,13 +75,7 @@ scale_fill_glyptotek <- function(palette = "full",
                               reverse = FALSE,
                               aesthetics = "fill",
                               ...) {
-  pal <- palette_glyptotek(palette = palette, reverse = reverse)
-
-  if (discrete) {
-    discrete_scale(aesthetics = aesthetics, palette = pal, ...)
-  } else {
-    scale_fill_gradientn(colours = pal(256), aesthetics = aesthetics, ...)
-  }
+  .scale_fill_engine(palette_glyptotek, palette, discrete, reverse, aesthetics, ...)
 }
 
 
@@ -152,15 +141,7 @@ glyptotek_colors_list <- c(
 #' glyptotek_colors("glyptotekBlue", "yellow1")
 #'
 #' @export
-glyptotek_colors <- function(...) {
-  cols <- c(...)
-
-  if (is.null(cols)) {
-    return(glyptotek_colors_list)
-  }
-
-  glyptotek_colors_list[cols]
-}
+glyptotek_colors <- function(...) .extract_colors(glyptotek_colors_list, ...)
 
 glyptotek_palettes <- list(
   `full` = glyptotek_colors()
@@ -181,4 +162,4 @@ palette_glyptotek <- function(palette = "full", reverse = FALSE, ...) {
   .retrieve_palette(palette, glyptotek_palettes, reverse = reverse, ...)
 }
 
-# helper moved to R/utils.R (.retrieve_palette)
+# helpers moved to R/utils.R (.retrieve_palette, .scale_color_engine, .scale_fill_engine, .extract_colors)

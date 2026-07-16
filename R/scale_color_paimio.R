@@ -4,19 +4,14 @@
 #' (\url{https://paimiosanatorium.com/}] by architect Alvar Aalto.
 #'
 #'
+#' @include utils.R
 #' @export
 scale_color_paimio <- function(palette = "full",
                                discrete = TRUE,
                                reverse = FALSE,
                                aesthetics = "color",
                                ...) {
-  pal <- palette_paimio(palette = palette, reverse = reverse)
-
-  if (discrete) {
-    discrete_scale(aesthetics = aesthetics, palette = pal, ...)
-  } else {
-    scale_color_gradientn(colours = pal(256), aesthetics = aesthetics)
-  }
+  .scale_color_engine(palette_paimio, palette, discrete, reverse, aesthetics, ...)
 }
 
 
@@ -81,13 +76,7 @@ scale_fill_paimio <- function(palette = "full",
                               reverse = FALSE,
                               aesthetics = "fill",
                               ...) {
-  pal <- palette_paimio(palette = palette, reverse = reverse)
-
-  if (discrete) {
-    discrete_scale(aesthetics = aesthetics, palette = pal, ...)
-  } else {
-    scale_fill_gradientn(colours = pal(256), aesthetics = aesthetics, ...)
-  }
+  .scale_fill_engine(palette_paimio, palette, discrete, reverse, aesthetics, ...)
 }
 
 
@@ -159,15 +148,7 @@ paimio_colors_list <- c(
 #' paimio_colors("paimioBlue", "yellow1")
 #'
 #' @export
-paimio_colors <- function(...) {
-  cols <- c(...)
-
-  if (is.null(cols)) {
-    return(paimio_colors_list)
-  }
-
-  paimio_colors_list[cols]
-}
+paimio_colors <- function(...) .extract_colors(paimio_colors_list, ...)
 
 paimio_palettes <- list(
   `full` = paimio_colors(),
@@ -189,4 +170,4 @@ palette_paimio <- function(palette = "full", reverse = FALSE, ...) {
   .retrieve_palette(palette, paimio_palettes, reverse = reverse, ...)
 }
 
-# helper moved to R/utils.R (.retrieve_palette)
+# helpers moved to R/utils.R (.retrieve_palette, .scale_color_engine, .scale_fill_engine, .extract_colors)
