@@ -7,49 +7,101 @@
 geom_violinhist(
   data = NULL,
   mapping = NULL,
-  side = c("left", "right"),
-  fill = "lightblue",
+  side = c("right", "left"),
+  fill = NULL,
   violin_alpha = 1,
   violin_linewidth = 0,
   nudge_value = 0,
-  bins = 30,
+  bins = 7,
   binwidth = NULL,
   width = 0.4,
-  hist_fill = "grey20",
+  normalize = FALSE,
+  hist_fill = NULL,
   hist_alpha = 0.4,
   hist_color = NA,
+  hist_side_flip = FALSE,
+  hist_linewidth = 0,
   ...
 )
 }
 \arguments{
-\item{data, }{mapping Standard ggplot2 layer arguments (see `ggplot2::layer`).
-Mapping is expected to map `y` to the numeric variable and `x` to the
-grouping/factor variable (same convention as `geom_violin`).}
+\item{data}{A data frame. If `NULL` (the default), data is inherited from
+the plot data as specified in `ggplot()`.}
 
-\item{side}{Which side to draw the violin on: `"left"` or `"right"`.}
+\item{mapping}{Set of aesthetic mappings created by `aes()`. If `NULL`
+(the default), mappings are inherited from the plot mapping. Requires
+`x` (grouping variable) and `y` (continuous variable) aesthetics.}
 
-\item{fill}{Fill color for the violin.}
+\item{side}{Which side to draw the violin on: `"right"` (default) or `"left"`.
+The histogram is drawn on the opposite side.}
 
-\item{violin_alpha}{Violin alpha value.}
+\item{fill}{Fill color for the violin. If `NULL` (default), inherits from
+the aesthetic mapping `aes(fill = ...)`. Set to a specific color to
+override mapping.}
 
-\item{violin_linewidth}{Violin line width.}
+\item{violin_alpha}{Transparency level for the violin (0 = fully transparent,
+1 = fully opaque). Default is 1.}
 
-\item{nudge_value}{Horizontal nudge to separate the two halves.}
+\item{violin_linewidth}{Line width for the violin outline. Default is 0
+(no outline).}
 
-\item{...}{Additional arguments passed to the underlying layers.}
+\item{nudge_value}{Horizontal offset to visually separate violin and histogram.
+Default is 0 (no separation). Positive values increase separation.}
+
+\item{bins}{Number of histogram bins. Default is 7. Ignored if `binwidth`
+is specified.}
+
+\item{binwidth}{Width of histogram bins. If specified, overrides `bins`.
+Default is `NULL`.}
+
+\item{width}{Maximum horizontal extent of the histogram bars in x-axis units.
+Default is 0.4.}
+
+\item{normalize}{Logical. If `TRUE`, histogram bar widths are scaled so the
+tallest bar reaches `width`. If `FALSE` (default), bar widths are
+proportional to density × `width` without normalization.}
+
+\item{hist_fill}{Fill color for histogram bars. If `NULL` (default), inherits
+from the aesthetic mapping `aes(fill = ...)`. If no mapping exists,
+defaults to "grey20".}
+
+\item{hist_alpha}{Transparency level for histogram bars. Default is 0.4.}
+
+\item{hist_color}{Outline color for histogram bars. Default is `NA` (no outline).}
+
+\item{...}{Additional arguments passed to the violin layer (e.g., other
+parameters accepted by `see::geom_violinhalf()`).}
 }
 \value{
-A list of ggplot2 layers.
+A list of two ggplot2 layers: the half-violin layer and the
+  histogram layer.
 }
 \description{
-`geom_violinhist()` draws a half violin on one side of the group and a
-histogram of the same data on the other side. This is a lightweight
-first implementation (skeleton) that returns a half-violin layer and a
-placeholder for the histogram. We'll iterate on the histogram implementation
-in small steps so the behavior matches your intended visual.
+`geom_violinhist()` creates a combined visualization that draws a half violin
+plot on one side of each group and a density-scaled histogram on the opposite
+side. This allows for simultaneous display of smooth density estimation
+(violin) and binned distribution (histogram) for the same data.
 }
 \examples{
-# Intended usage (works once you have data mapping):
-# ggplot(df, aes(x = group, y = value)) +
-#   geom_violinhist()
+library(ggplot2)
+
+# Basic usage with default settings (violin on right, histogram on left)
+ggplot(iris, aes(x = Species, y = Sepal.Width)) +
+  geom_violinhist()
+
+# With fill aesthetic mapping
+ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
+  geom_violinhist()
+
+# Customize histogram bins and separation
+ggplot(iris, aes(x = Species, y = Sepal.Width)) +
+  geom_violinhist(bins = 10, nudge_value = 0.05)
+
+# Normalized histogram (tallest bar reaches full width)
+ggplot(iris, aes(x = Species, y = Sepal.Width)) +
+  geom_violinhist(normalize = TRUE)
+
+# Violin on left, histogram on right
+ggplot(iris, aes(x = Species, y = Sepal.Width)) +
+  geom_violinhist(side = "left")
 }
