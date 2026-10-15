@@ -1,0 +1,244 @@
+---
+title: "Using geom_violinhist"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using geom_violinhist}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup-options, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4,
+  out.width = "100%"
+)
+```
+
+`geom_violinhist()` draws a half violin and a histogram side by side for
+each group. The violin shows a smooth density estimate, while the
+histogram shows the binned data it is based on, so you can judge both
+the overall shape and how much data supports it.
+
+```{r load-packages}
+library(ggplot2)
+library(sdlhRTools)
+```
+
+## Basic usage
+
+Map a grouping variable to `x` and a continuous variable to `y`. By
+default the violin is drawn on the right and the histogram on the left.
+
+```{r basic}
+ggplot(iris, aes(x = Species, y = Sepal.Width)) +
+  geom_violinhist()
+```
+
+Mapping `fill` colours both halves by group:
+
+```{r basic-fill}
+ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
+  geom_violinhist()
+```
+
+`geom_violinhist()` combines well with other layers, such as a narrow
+boxplot and the raw points:
+
+```{r combined}
+ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
+  geom_violinhist(binwidth = 0.3) +
+  geom_boxplot(width = 0.05, fill = "white", outlier.shape = NA) +
+  geom_jitter(height = 0, width = 0.02, size = 0.8)
+```
+
+## Scaling groups: `scale`
+
+The `scale` argument controls how groups are sized relative to each
+other. It takes the same options as `ggplot2::geom_violin()` and applies
+them to both halves. In all modes the largest group in the panel reaches
+the full width, and the result does not depend on the units of `y`.
+
+To see the differences, we use two small simulated datasets: one where
+groups have the same shape but different sample sizes, and one where
+groups have the same sample size but different spreads.
+
+```{r sim-data}
+set.seed(1)
+
+# Same shape, different sample sizes
+d_n <- data.frame(
+  group = rep(c("small (n = 30)", "large (n = 300)"), c(30, 300)),
+  y     = c(rnorm(30), rnorm(300))
+)
+
+# Same sample size, different spreads
+d_sd <- data.frame(
+  group = rep(c("narrow (sd = 0.5)", "wide (sd = 2)"), each = 200),
+  y     = c(rnorm(200, sd = 0.5), rnorm(200, sd = 2))
+)
+```
+
+### `"area"` (default)
+
+Every group has the same area, regardless of how many observations it
+has. Groups with the same distribution look the same even if one is ten
+times larger, while a concentrated group is drawn wider than a
+spread-out one.
+
+```{r scale-area}
+ggplot(d_n, aes(group, y, fill = group)) +
+  geom_violinhist(binwidth = 0.5, scale = "area")
+
+ggplot(d_sd, aes(group, y, fill = group)) +
+  geom_violinhist(binwidth = 0.5, scale = "area")
+```
+
+### `"count"`
+
+Areas are proportional to the number of observations, so smaller groups
+are drawn smaller. Histogram bars are proportional to bin counts. Use
+this when group size is part of the story.
+
+```{r scale-count}
+ggplot(d_n, aes(group, y, fill = group)) +
+  geom_violinhist(binwidth = 0.5, scale = "count")
+```
+
+### `"width"`
+
+Each group is scaled on its own so its peak reaches the full width. This
+is useful for comparing the shapes of the distributions, but areas are
+no longer comparable between groups.
+
+```{r scale-width}
+ggplot(d_sd, aes(group, y, fill = group)) +
+  geom_violinhist(binwidth = 0.5, scale = "width")
+```
+
+### Different scaling for each half
+
+`violin_scale` and `hist_scale` override `scale` for one half only. For
+example, the violin can show group sizes while the histogram compares
+shapes:
+
+```{r scale-override}
+ggplot(d_n, aes(group, y, fill = group)) +
+  geom_violinhist(binwidth = 0.5, scale = "count", hist_scale = "area")
+```
+
+### Independent of units
+
+Because bars are scaled against the largest group in the panel, changing
+the units of `y` only changes the axis, not the plot:
+
+```{r units}
+ggplot(iris, aes(x = Species, y = Sepal.Width * 10, fill = Species)) +
+  geom_violinhist(binwidth = 3) +
+  labs(y = "Sepal.Width (mm)")
+```
+
+## Choosing bins: `bins` and `binwidth`
+
+All groups share the same bins, so bars line up across groups, as in
+`ggplot2::geom_histogram()`.
+
+`bins` splits the full range of `y` into exactly that many equal bins.
+The bin edges may fall on uneven values:
+
+```{r bins}
+ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
+  geom_violinhist(bins = 12)
+```
+
+`binwidth` sets the width of each bin in the units of `y`, and places
+bin edges at multiples of it. This usually gives rounder, easier-to-read
+edges and is the recommended option:
+
+```{r binwidth}
+ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
+  geom_violinhist(binwidth = 0.2)
+```
+
+## Layout: `side`, `hist_side_flip`, `nudge_value` and `width`
+
+`side` chooses which side the violin is drawn on; the histogram goes on
+the other side:
+
+```{r side-left}
+ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
+  geom_violinhist(binwidth = 0.2, side = "left")
+```
+
+`hist_side_flip = TRUE` draws the histogram on the same side as the
+violin, overlaid on it. A contrasting `hist_fill` keeps the bars visible
+on top of the violin:
+
+```{r side-flip}
+ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
+  geom_violinhist(binwidth = 0.2, hist_side_flip = TRUE, hist_fill = "grey20")
+```
+
+`nudge_value` moves the two halves apart, and `width` sets the maximum
+length of the histogram bars in x-axis units:
+
+```{r nudge-width}
+ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
+  geom_violinhist(binwidth = 0.2, nudge_value = 0.05, width = 0.3)
+```
+
+## Styling
+
+The violin and the histogram are styled separately with the `violin_*`
+and `hist_*` arguments. `fill` and `hist_fill` set fixed colours that
+override any `fill` mapping:
+
+```{r styling}
+ggplot(iris, aes(x = Species, y = Sepal.Width)) +
+  geom_violinhist(
+    binwidth = 0.2,
+    fill = "grey85",
+    violin_linewidth = 0.3,
+    hist_fill = "steelblue",
+    hist_alpha = 0.8,
+    hist_color = "white",
+    hist_linewidth = 0.3
+  )
+```
+
+It also works with the themes and palettes in this package:
+
+```{r styling-package}
+ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
+  geom_violinhist(binwidth = 0.2, hist_alpha = 0.6) +
+  scale_fill_paimio(palette = "contrast") +
+  labs(x = NULL, y = "Sepal width (cm)") +
+  theme_sdlh()
+```
+
+## Facets
+
+Bins are shared across facets when the facet scales are fixed, so bars
+can be compared between panels too:
+
+```{r facets}
+ggplot(mtcars, aes(x = factor(cyl), y = mpg, fill = factor(cyl))) +
+  geom_violinhist(binwidth = 2.5) +
+  facet_wrap(~ am, labeller = as_labeller(c(`0` = "automatic", `1` = "manual"))) +
+  labs(x = "cylinders", fill = "cylinders")
+```
+
+## Legends and inherited aesthetics
+
+`show.legend` and `inherit.aes` apply to both halves. For example, to
+hide the legend when `x` already identifies the groups:
+
+```{r legend}
+ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
+  geom_violinhist(binwidth = 0.2, show.legend = FALSE)
+```
