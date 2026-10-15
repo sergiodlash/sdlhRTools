@@ -10,7 +10,7 @@
 \alias{scale_fill_glyptotek}
 \alias{scale_fill_glyptotek_d}
 \alias{scale_fill_glyptotek_c}
-\title{Ny Calsberg Glyptotek Color Palette}
+\title{Ny Carlsberg Glyptotek Color Palette}
 \usage{
 scale_color_glyptotek(
   palette = "full",

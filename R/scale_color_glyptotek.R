@@ -1,4 +1,4 @@
-#' Ny Calsberg Glyptotek Color Palette
+#' Ny Carlsberg Glyptotek Color Palette
 #'
 #' This color palette is based on the colors from the walls of the Ny Calrsberg
 #' Glyptotek in Copenhagen, Denmark.

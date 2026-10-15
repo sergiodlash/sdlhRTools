@@ -4,7 +4,6 @@
 #'
 #' @return A ggplot2 theme object
 #'
-#'
 #' @examples
 #' ggplot(pressure, aes(temperature, pressure)) +
 #'   geom_point() +
