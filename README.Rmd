@@ -4,7 +4,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -34,7 +34,7 @@ The development version of this package is available to install from GitHub.
 
 Once the installation is complete, you can load the package in your R scripts by using:
 
-```{r}
+```{r load-packages}
 library(ggplot2)
 library(sdlhRTools)
 ```
@@ -61,18 +61,27 @@ ggplot(pressure, aes(temperature, pressure)) +
 
 The `geom_violinhist` plots a half violin and a histogram to show data distributions.
 
-```{r violinhist}
+```{r violinhist-1}
+ggplot(iris, aes(Species, Sepal.Width, fill = Species)) +
+  geom_violinhist(show.legend = FALSE) +
+  theme_sdlh()
+
+```
+
+```{r violinhist-2}
 ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
   geom_violinhist(
     binwidth = 0.3,
-    nudge_value = 0
+    nudge_value = 0.05
   ) +
   geom_boxplot(
-    width = 0.05
+    width = 0.05,
+    outlier.shape = NA
   ) +
   geom_jitter(
     height = 0,
-    width = 0.02
+    width = 0.025,
+    alpha = 0.5
   )
 ```
 
@@ -96,7 +105,7 @@ ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
 
 ### Ny Carlsberg Glyptotek
 
-Color palette inspired in the Ny Calrsberg Glyptotek in Copenhagen.
+Color palette inspired in the Ny Carlsberg Glyptotek in Copenhagen.
 
 ```{r glyptotek}
 ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species, color = Species)) +
