@@ -9,3 +9,6 @@
 # Built vignettes
 /doc/
 /Meta/
+
+# Plots from scripts run without a display
+Rplots.pdf
