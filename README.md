@@ -1,30 +1,47 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# sdlhRTools: Personal package with custom functions for data visualization and analysis.
+# sdlhRTools
 
 <!-- badges: start -->
 
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![License:
+MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
+
 <!-- badges: end -->
 
-The R package *sdlhRTools* aims to collect in a single place auxiliary
-functions and customized data visualization tools that I use frequently
-when working with R. This package was born with the intention of
-personal use, but I try to keep and maintain a consistent and
-comprehensive documentation.
+Personal R package with ggplot2 themes, geoms, and color palettes for
+data visualization and analysis.
 
-This is work continuously changing and under development. I welcome
-feedback, contributions and suggestions from users who may find anything
-useful here.
+The R package *sdlhRTools* collects helper functions and ggplot2
+extensions I use frequently. It started as a personal toolbox, but every
+function is documented and examples are included so others can pick up
+anything they find useful.
 
-# Installation
+The package is under active development and its API is subject to
+change. Feedback, bug reports and suggestions are welcome via [GitHub
+issues](https://github.com/sergiodlash/sdlhRTools/issues).
 
-The development version of this package is available to install from
-GitHub.
+## Overview
 
-| Type        | Source | Command                                             |
-|-------------|--------|-----------------------------------------------------|
-| Development | GitHub | `remotes::install_github("sergiodlash/sdlhRTools")` |
+| Category | Function | Description |
+|----|----|----|
+| Theme | `theme_sdlh()` | Compact minimal ggplot2 theme |
+| Geom | `geom_violinhist()` | Half violin + histogram to show distributions |
+| Palette | `scale_color_paimio()`, `scale_fill_paimio()` | Palette inspired by the Paimio Sanatorium (Alvar Aalto) |
+| Palette | `scale_color_glyptotek()`, `scale_fill_glyptotek()` | Palette inspired by the Ny Carlsberg Glyptotek |
+| Helper | `paimio_colors()`, `glyptotek_colors()` | Get palette colors as hex codes |
+
+## Installation
+
+The development version is available to install from GitHub:
+
+| Installer | Command | Notes |
+|----|----|----|
+| pak (recommended) | `pak::pak("sergiodlash/sdlhRTools")` | Fast, resolves dependencies |
+| remotes | `remotes::install_github("sergiodlash/sdlhRTools", build_vignettes = TRUE)` | Use this to also build the vignettes |
 
 Once the installation is complete, you can load the package in your R
 scripts by using:
@@ -34,32 +51,39 @@ library(ggplot2)
 library(sdlhRTools)
 ```
 
-If you encounter any issues or have suggestions, please feel free to
-open an issue on the GitHub repository.
+## Examples
 
-# Examples
+### Themes
 
-## Themes
+#### theme_sdlh()
 
-### sdlh
-
-A compact minimal theme with a bottom legend, used throughout the
-examples below.
+A compact minimal theme based on `theme_minimal()` with smaller text,
+tight margins and bottom right legend.
 
 ``` r
-ggplot(pressure, aes(temperature, pressure)) +
-  geom_point() +
-  theme_sdlh()
+library(patchwork)
+
+p <- ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) +
+    geom_point(size = 2) +
+    labs(
+      x = "Weight (1000 lbs)",
+      y = "Miles per gallon",
+      color = "Cylinders"
+    )
+
+(p + ggtitle("ggplot2 default") + theme_grey()) |
+(p + ggtitle("Custom Theme") + theme_sdlh())
 ```
 
 <img src="man/figures/README-sdlh-1.png" alt="" width="90%" />
 
-## Geoms
+### Geoms
 
-### Violin hist
+#### geom_violinhist()
 
-The `geom_violinhist` plots a half violin and a histogram to show data
-distributions.
+The `geom_violinhist()` plots a half violin and a histogram together.
+This shows both the smoothed density and the binned counts of each group
+in a single layer.
 
 ``` r
 ggplot(iris, aes(Species, Sepal.Width, fill = Species)) +
@@ -68,6 +92,10 @@ ggplot(iris, aes(Species, Sepal.Width, fill = Species)) +
 ```
 
 <img src="man/figures/README-violinhist-1-1.png" alt="" width="90%" />
+
+Because it is a regular ggplot2 layer, it can be combined with other
+geoms. For example, adding a small `nudge_value` leaves a gap in the
+middle for a boxplot and the raw data points:
 
 ``` r
 ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
@@ -83,14 +111,19 @@ ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
     height = 0,
     width = 0.025,
     alpha = 0.5
-  )
+  ) +
+  theme_sdlh()
 ```
 
 <img src="man/figures/README-violinhist-2-1.png" alt="" width="90%" />
 
-## Color Palettes
+See `vignette("geom_violinhist", package = "sdlhRTools")`
+([source](vignettes/geom_violinhist.Rmd)) for more example and styling
+options.
 
-### Paimio Sanatorium
+### Color palettes
+
+#### Paimio Sanatorium
 
 Color palette inspired in the Paimio Sanatorium by architect Alvar Aalto
 in Finland.
@@ -109,7 +142,7 @@ ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
 
 <img src="man/figures/README-paimio-1.png" alt="" width="90%" />
 
-### Ny Carlsberg Glyptotek
+#### Ny Carlsberg Glyptotek
 
 Color palette inspired in the Ny Carlsberg Glyptotek in Copenhagen.
 
