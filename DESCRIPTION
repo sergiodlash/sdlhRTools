@@ -11,6 +11,7 @@ LazyData: true
 Imports:
     ggplot2,
     graphics,
+    grDevices,
     scales,
     see,
     stats
@@ -20,10 +21,3 @@ Suggests:
     patchwork
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.1.1
-Collate: 
-    'geom_raincloud.R'
-    'geom_violinhist.R'
-    'utils.R'
-    'scale_color_glyptotek.R'
-    'scale_color_paimio.R'
-    'theme_sdlh.R'

@@ -216,7 +216,7 @@ It also works with the themes and palettes in this package:
 ```{r styling-package}
 ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
   geom_violinhist(binwidth = 0.2, hist_alpha = 0.6) +
-  scale_fill_paimio(palette = "contrast") +
+  scale_fill_sdlh_d("paimio_contrast") +
   labs(x = NULL, y = "Sepal width (cm)") +
   theme_sdlh()
 ```

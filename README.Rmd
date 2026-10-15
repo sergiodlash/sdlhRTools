@@ -34,9 +34,9 @@ The package is under active development and its API is subject to change. Feedba
 |---|---|---|
 | Theme | `theme_sdlh()` | Compact minimal ggplot2 theme |
 | Geom | `geom_violinhist()` | Half violin + histogram to show distributions |
-| Palette | `scale_color_paimio()`, `scale_fill_paimio()` | Palette inspired by the Paimio Sanatorium (Alvar Aalto) |
-| Palette | `scale_color_glyptotek()`, `scale_fill_glyptotek()` | Palette inspired by the Ny Carlsberg Glyptotek |
-| Helper | `paimio_colors()`, `glyptotek_colors()` | Get palette colors as hex codes |
+| Palette | `scale_color_sdlh_d()`, `scale_fill_sdlh_d()` | Discrete color and fill scales (`_c` for continuous data) |
+| Palette | `sdlh_palettes` | Palettes inspired by the Paimio Sanatorium and the Ny Carlsberg Glyptotek |
+| Helper | `sdlh_palette()` | Get palette colors as hex codes |
 
 ## Installation
 
@@ -127,7 +127,7 @@ ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
     x = "Sepal Length",
     y = "Sepal Width"
   ) +
-  scale_color_paimio(palette = "contrast", reverse = TRUE) +
+  scale_color_sdlh_d("paimio_contrast", reverse = TRUE) +
   theme_sdlh()
 ```
 
@@ -144,7 +144,7 @@ ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species, color = Species))
     x = "Species",
     y = "Sepal Width"
   ) +
-  scale_fill_glyptotek() +
-  scale_color_glyptotek() +
+  scale_fill_sdlh_d("glyptotek") +
+  scale_color_sdlh_d("glyptotek") +
   theme_sdlh()
 ```
