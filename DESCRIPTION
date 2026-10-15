@@ -1,19 +1,24 @@
 Package: sdlhRTools
 Type: Package
-Title: A collection handy functions and utilities to use for data analysis and data visualization in R.
+Title: A collection of handy functions and utilities to use for data analysis and data visualization in R.
 Version: 0.1.0
 Authors@R: person("Sergio", "de las Heras", email="sergio.delasheras@aalto.fi",
           role = c("aut", "cre"))
-Description: This package contains functions and utilities that I use frequently in R.
+Description: This package contains functions and utilities for data analysis and plots.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
     ggplot2,
+    graphics,
     scales,
     see,
     stats
-Config/roxygen2/version: 8.0.0
+Suggests:
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Config/roxygen2/version: 8.1.1
 Collate: 
     'geom_raincloud.R'
     'geom_violinhist.R'

@@ -12,15 +12,19 @@ geom_violinhist(
   violin_alpha = 1,
   violin_linewidth = 0,
   nudge_value = 0,
+  scale = c("area", "count", "width"),
+  violin_scale = NULL,
+  hist_scale = NULL,
   bins = 7,
   binwidth = NULL,
   width = 0.4,
-  normalize = FALSE,
   hist_fill = NULL,
   hist_alpha = 0.4,
   hist_color = NA,
   hist_side_flip = FALSE,
   hist_linewidth = 0,
+  show.legend = NA,
+  inherit.aes = TRUE,
   ...
 )
 }
@@ -48,18 +52,29 @@ override mapping.}
 \item{nudge_value}{Horizontal offset to visually separate violin and histogram.
 Default is 0 (no separation). Positive values increase separation.}
 
-\item{bins}{Number of histogram bins. Default is 7. Ignored if `binwidth`
-is specified.}
+\item{scale}{How to scale groups relative to each other, applied to both the
+violin and the histogram (same options as [ggplot2::geom_violin()]):
+* `"area"` (default): every group has the same area, regardless of how
+  many observations it has. The tallest bar in the panel reaches `width`.
+* `"count"`: areas are proportional to the number of observations, so
+  smaller groups are drawn smaller. Bars are proportional to bin counts.
+* `"width"`: each group is scaled independently so its own peak reaches
+  the maximum width.}
+
+\item{violin_scale, hist_scale}{Override `scale` for only the violin or only
+the histogram. If `NULL` (default), they follow `scale`.}
+
+\item{bins}{Number of histogram bins, spanning the full range of the y
+scale. Default is 7. Ignored if `binwidth` is specified. Bins are shared
+by all groups, so bars line up across groups, as in
+[ggplot2::geom_histogram()].}
 
 \item{binwidth}{Width of histogram bins. If specified, overrides `bins`.
-Default is `NULL`.}
+Bin edges are multiples of `binwidth`, which gives round, easy-to-read
+edges. Default is `NULL`.}
 
 \item{width}{Maximum horizontal extent of the histogram bars in x-axis units.
 Default is 0.4.}
-
-\item{normalize}{Logical. If `TRUE`, histogram bar widths are scaled so the
-tallest bar reaches `width`. If `FALSE` (default), bar widths are
-proportional to density × `width` without normalization.}
 
 \item{hist_fill}{Fill color for histogram bars. If `NULL` (default), inherits
 from the aesthetic mapping `aes(fill = ...)`. If no mapping exists,
@@ -69,7 +84,21 @@ defaults to "grey20".}
 
 \item{hist_color}{Outline color for histogram bars. Default is `NA` (no outline).}
 
-\item{...}{Additional arguments passed to the violin layer (e.g., other
+\item{hist_side_flip}{Logical. If `TRUE`, the histogram is drawn on the same
+side as the violin, not the opposite side. Default is `FALSE`.}
+
+\item{hist_linewidth}{Line width for the histogram bar outlines, used
+together with `hist_color`. Default is 0.}
+
+\item{show.legend}{Logical. Should the layers be included in the legend?
+`NA` (default) includes them if any aesthetics are mapped, `FALSE` never
+includes them and `TRUE` always does. Applied to both the violin and the
+histogram.}
+
+\item{inherit.aes}{If `FALSE`, overrides the default aesthetics rather than
+combining with them. Applied to both the violin and the histogram.}
+
+\item{...Additional}{arguments passed to the violin layer (e.g., other
 parameters accepted by `see::geom_violinhalf()`).}
 }
 \value{
@@ -97,9 +126,17 @@ ggplot(iris, aes(x = Species, y = Sepal.Width, fill = Species)) +
 ggplot(iris, aes(x = Species, y = Sepal.Width)) +
   geom_violinhist(bins = 10, nudge_value = 0.05)
 
-# Normalized histogram (tallest bar reaches full width)
+# Per-group scaling (each group's peak reaches full width)
 ggplot(iris, aes(x = Species, y = Sepal.Width)) +
-  geom_violinhist(normalize = TRUE)
+  geom_violinhist(scale = "width")
+
+# Scale by number of observations (groups with more data are larger)
+ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+  geom_violinhist(scale = "count")
+
+# Different scaling for each half
+ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+  geom_violinhist(scale = "count", hist_scale = "area")
 
 # Violin on left, histogram on right
 ggplot(iris, aes(x = Species, y = Sepal.Width)) +

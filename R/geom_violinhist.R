@@ -21,21 +21,41 @@
 #'   (no outline).
 #' @param nudge_value Horizontal offset to visually separate violin and histogram.
 #'   Default is 0 (no separation). Positive values increase separation.
-#' @param bins Number of histogram bins. Default is 7. Ignored if `binwidth`
-#'   is specified.
+#' @param bins Number of histogram bins, spanning the full range of the y
+#'   scale. Default is 7. Ignored if `binwidth` is specified. Bins are shared
+#'   by all groups, so bars line up across groups, as in
+#'   [ggplot2::geom_histogram()].
 #' @param binwidth Width of histogram bins. If specified, overrides `bins`.
-#'   Default is `NULL`.
+#'   Bin edges are multiples of `binwidth`, which gives round, easy-to-read
+#'   edges. Default is `NULL`.
 #' @param width Maximum horizontal extent of the histogram bars in x-axis units.
 #'   Default is 0.4.
-#' @param normalize Logical. If `TRUE`, histogram bar widths are scaled so the
-#'   tallest bar reaches `width`. If `FALSE` (default), bar widths are
-#'   proportional to density × `width` without normalization.
+#' @param scale How to scale groups relative to each other, applied to both the
+#'   violin and the histogram (same options as [ggplot2::geom_violin()]):
+#'   * `"area"` (default): every group has the same area, regardless of how
+#'     many observations it has. The tallest bar in the panel reaches `width`.
+#'   * `"count"`: areas are proportional to the number of observations, so
+#'     smaller groups are drawn smaller. Bars are proportional to bin counts.
+#'   * `"width"`: each group is scaled independently so its own peak reaches
+#'     the maximum width.
+#' @param violin_scale,hist_scale Override `scale` for only the violin or only
+#'   the histogram. If `NULL` (default), they follow `scale`.
 #' @param hist_fill Fill color for histogram bars. If `NULL` (default), inherits
 #'   from the aesthetic mapping `aes(fill = ...)`. If no mapping exists,
 #'   defaults to "grey20".
 #' @param hist_alpha Transparency level for histogram bars. Default is 0.4.
 #' @param hist_color Outline color for histogram bars. Default is `NA` (no outline).
-#' @param ... Additional arguments passed to the violin layer (e.g., other
+#' @param hist_side_flip Logical. If `TRUE`, the histogram is drawn on the same
+#'   side as the violin, not the opposite side. Default is `FALSE`.
+#' @param hist_linewidth Line width for the histogram bar outlines, used
+#'   together with `hist_color`. Default is 0.
+#' @param show.legend Logical. Should the layers be included in the legend?
+#'   `NA` (default) includes them if any aesthetics are mapped, `FALSE` never
+#'   includes them and `TRUE` always does. Applied to both the violin and the
+#'   histogram.
+#' @param inherit.aes If `FALSE`, overrides the default aesthetics rather than
+#'   combining with them. Applied to both the violin and the histogram.
+#' @param ...Additional arguments passed to the violin layer (e.g., other
 #'   parameters accepted by `see::geom_violinhalf()`).
 #'
 #' @return A list of two ggplot2 layers: the half-violin layer and the
@@ -58,9 +78,17 @@
 #' ggplot(iris, aes(x = Species, y = Sepal.Width)) +
 #'   geom_violinhist(bins = 10, nudge_value = 0.05)
 #'
-#' # Normalized histogram (tallest bar reaches full width)
+#' # Per-group scaling (each group's peak reaches full width)
 #' ggplot(iris, aes(x = Species, y = Sepal.Width)) +
-#'   geom_violinhist(normalize = TRUE)
+#'   geom_violinhist(scale = "width")
+#'
+#' # Scale by number of observations (groups with more data are larger)
+#' ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+#'   geom_violinhist(scale = "count")
+#'
+#' # Different scaling for each half
+#' ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+#'   geom_violinhist(scale = "count", hist_scale = "area")
 #'
 #' # Violin on left, histogram on right
 #' ggplot(iris, aes(x = Species, y = Sepal.Width)) +
@@ -72,18 +100,29 @@ geom_violinhist <- function(data = NULL,
                             violin_alpha = 1,
                             violin_linewidth = 0,
                             nudge_value = 0,
+                            scale = c("area", "count", "width"),
+                            violin_scale = NULL,
+                            hist_scale = NULL,
                             # histogram params
                             bins = 7,
                             binwidth = NULL,
                             width = 0.4,
-                            normalize = FALSE,
                             hist_fill = NULL,
                             hist_alpha = 0.4,
                             hist_color = NA,
                             hist_side_flip = FALSE,
                             hist_linewidth = 0,
+                            # layer params, shared by both halves
+                            show.legend = NA,
+                            inherit.aes = TRUE,
                             ...) {
   side <- match.arg(side)
+
+  # Each half follows `scale` unless overridden individually
+  scale_options <- c("area", "count", "width")
+  scale <- match.arg(scale)
+  violin_scale <- match.arg(if (is.null(violin_scale)) scale else violin_scale, scale_options)
+  hist_scale <- match.arg(if (is.null(hist_scale)) scale else hist_scale, scale_options)
 
   # Determine nudge direction based on which side the violin is drawn
   # Negative nudge for left-side violin, positive for right-side violin
@@ -97,7 +136,10 @@ geom_violinhist <- function(data = NULL,
     linewidth = violin_linewidth,
     alpha = violin_alpha,
     position = ggplot2::position_nudge(nudge_value),
-    flip = side == "left"
+    flip = side == "left",
+    scale = violin_scale,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes
   )
   if (!is.null(fill)) violin_args$fill <- fill
 
@@ -113,7 +155,7 @@ geom_violinhist <- function(data = NULL,
     binwidth = binwidth,
     width = width,
     linewidth = hist_linewidth,
-    normalize = normalize,
+    hist_scale = hist_scale,
     side = side,
     nudge = - nudge_value,        # Opposite direction from violin
     alpha = hist_alpha,
@@ -132,9 +174,10 @@ geom_violinhist <- function(data = NULL,
     stat = StatViolinhist,
     data = data,
     mapping = mapping,
-    geom = ggplot2::GeomRect,
+    geom = GeomViolinhistRect,
     position = "identity",
-    inherit.aes = TRUE,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
     params = hist_params
   )
 
@@ -151,7 +194,41 @@ StatViolinhist <- ggplot2::ggproto(
   "StatViolinhist",
   ggplot2::Stat,
   required_aes = c("x", "y"),
-  compute_group = function(data, scales, bins = 7, binwidth = NULL, width = 0.4, normalize = FALSE, side = "right", fill = NULL, alpha = 0.4, colour = NA, nudge = 0) {
+  # bins and binwidth are consumed by compute_panel(), not compute_group().
+  # ggplot2 only keeps compute_group() arguments when compute_panel() has
+  # `...`, so add them explicitly or they are dropped before compute_panel()
+  parameters = function(self, extra = FALSE) {
+    c(ggplot2::ggproto_parent(ggplot2::Stat, self)$parameters(extra), "bins", "binwidth")
+  },
+  # Compute one set of breaks over the full y-scale range and share it across
+  # all groups, so bins line up between groups (and between facets with fixed
+  # scales), as in ggplot2::geom_histogram().
+  # Then run compute_group() per group, and for hist_scale = "area" or "count"
+  # rescale all bars against the panel-wide maximum so the tallest bar reaches
+  # `width`. This makes bar widths independent of the units of y while keeping
+  # groups comparable, like the violin's scale argument. hist_scale = "width"
+  # is already handled per group in compute_group().
+  compute_panel = function(self, data, scales, width = 0.4, hist_scale = "area", side = "right",
+                           bins = 7, binwidth = NULL, ...) {
+    breaks <- .violinhist_breaks(scales$y$dimension(), bins, binwidth)
+
+    df <- ggplot2::ggproto_parent(ggplot2::Stat, self)$compute_panel(
+      data, scales, width = width, hist_scale = hist_scale, side = side,
+      breaks = breaks, ...
+    )
+    if (hist_scale == "width" || nrow(df) == 0) return(df)
+
+    # "area": bars proportional to density (every group has the same area)
+    # "count": bars proportional to bin counts (area grows with group size)
+    value <- if (hist_scale == "count") df$count else df$density
+    max_value <- max(value, na.rm = TRUE)
+    if (is.finite(max_value) && max_value > 0) {
+      sign <- if (side == "left") 1 else -1
+      df$xmax <- df$xmin + sign * (value / max_value) * width
+    }
+    df
+  },
+  compute_group =function(data, scales, breaks, width = 0.4, hist_scale = "area", side = "right", nudge = 0) {
     y <- data$y
     x_center <- unique(data$x)
     if (length(x_center) > 1) x_center <- mean(x_center)
@@ -159,33 +236,8 @@ StatViolinhist <- ggplot2::ggproto(
     # Apply horizontal nudge to histogram position (opposite direction from violin)
     x_center <- x_center + nudge
 
-    # Compute histogram breaks based on binwidth or number of bins
-    if (!is.null(binwidth) && is.finite(binwidth) && binwidth > 0) {
-      # Use specified binwidth: round start/end to binwidth multiples to ensure
-      # breaks span the full data range
-      y_min <- min(y, na.rm = TRUE)
-      y_max <- max(y, na.rm = TRUE)
-      start <- floor(y_min / binwidth) * binwidth
-      end <- ceiling(y_max / binwidth) * binwidth
-
-      # Handle edge case where all values are identical
-      if (start == end) {
-        start <- y_min - binwidth
-        end <- y_max + binwidth
-      }
-
-      breaks <- seq(start, end, by = binwidth)
-
-      # Fallback if breaks computation fails
-      if (length(breaks) < 2) breaks <- pretty(range(y, na.rm = TRUE), n = bins)
-    } else {
-      # Use number of bins: let hist() determine optimal breaks
-      h <- hist(y, plot = FALSE, breaks = bins)
-      breaks <- h$breaks
-    }
-
-    # Compute histogram with determined breaks
-    h <- hist(y, breaks = breaks, plot = FALSE)
+    # Compute histogram with the panel-wide breaks from compute_panel()
+    h <- graphics::hist(y, breaks = breaks, plot = FALSE)
     counts <- h$counts
     mids <- h$mids
     binwidths <- diff(h$breaks)
@@ -196,13 +248,14 @@ StatViolinhist <- ggplot2::ggproto(
     bin_density <- counts / (npts * binwidths)
 
     # Convert density to bar widths (in x-axis units)
-    # If normalize=TRUE: scale so maximum bar reaches full width
-    # If normalize=FALSE: use raw density × width (bars proportional to density)
+    # If hist_scale="width": scale so this group's maximum bar reaches full width
+    # Otherwise: use raw density × width here; compute_panel() then rescales
+    # against the panel-wide maximum density or count
     if (all(bin_density == 0)) {
       # No data: all bars have zero width
       width_vals <- rep(0, length(bin_density))
-    } else if (isTRUE(normalize)) {
-      # Normalized: scale to [0, width] range
+    } else if (hist_scale == "width") {
+      # Per-group: scale to [0, width] range
       width_vals <- (bin_density / max(bin_density, na.rm = TRUE)) * width
     } else {
       # Raw density scaling: bars directly proportional to density
@@ -214,20 +267,13 @@ StatViolinhist <- ggplot2::ggproto(
     # If violin is on right, histogram extends left (negative)
     sign <- if (side == "left") 1 else -1
 
-    # Determine fill color with precedence: explicit param > aesthetic mapping > default grey
-    if (!is.null(fill)) {
-      # Use explicitly provided fill color
-      used_fill <- fill
-    } else if ("fill" %in% names(data)) {
-      # Inherit from aesthetic mapping (take first value, assumed constant per group)
-      used_fill <- rep(data$fill[1], length(bin_density))
-    } else {
-      # Default to grey when no fill specified
-      used_fill <- rep("grey20", length(bin_density))
-    }
-
     # Return data frame with rectangle coordinates for GeomRect
-    # Each row represents one histogram bar
+    # Each row represents one histogram bar. Fill, alpha and colour must not be
+    # set here: hist_fill/hist_alpha/hist_color are applied by ggplot2 as fixed
+    # aesthetics, a mapped fill is carried over from the group data, and the
+    # grey default comes from GeomViolinhistRect. A colour written here would
+    # be trained by the fill scale and show up as an extra legend entry
+    # whenever fill is mapped and hist_fill is set
     df <- data.frame(
       xmin = x_center,                          # Starting x position (group center)
       xmax = x_center + sign * width_vals,      # Ending x position (extends by bar width)
@@ -235,12 +281,48 @@ StatViolinhist <- ggplot2::ggproto(
       ymax = h$breaks[-1],                      # Upper edge of each bin
       y = mids,                                 # Bin midpoint (for potential reference)
       count = counts,                           # Raw count per bin
-      density = bin_density,                    # Density value per bin
-      fill = used_fill,                         # Fill color
-      alpha = alpha,                            # Transparency
-      colour = colour                           # Border color
+      density = bin_density                     # Density value per bin
     )
 
-    df
+    # Drop empty bins: shared breaks span the whole y range, so groups get
+    # empty bins outside their own range, which would otherwise be drawn as
+    # zero-width rectangles (visible as a line when hist_color is set)
+    df[df$count > 0, , drop = FALSE]
   }
 )
+
+# GeomRect with a dark grey default fill for the histogram bars, used when
+# fill is neither mapped nor set with hist_fill
+GeomViolinhistRect <- ggplot2::ggproto(
+  "GeomViolinhistRect",
+  ggplot2::GeomRect,
+  default_aes = local({
+    default_aes <- ggplot2::GeomRect$default_aes
+    default_aes$fill <- "grey20"
+    default_aes
+  })
+)
+
+# Histogram breaks over the y-scale range: edges at multiples of `binwidth` if
+# given, otherwise exactly `bins` equal-width bins
+.violinhist_breaks <- function(range, bins, binwidth) {
+  if (!is.null(binwidth) && is.finite(binwidth) && binwidth > 0) {
+    start <- floor(range[1] / binwidth) * binwidth
+    end <- ceiling(range[2] / binwidth) * binwidth
+
+    # Handle edge case where all values are identical
+    if (start == end) {
+      start <- start - binwidth
+      end <- end + binwidth
+    }
+
+    # Build from an integer count, not seq(by = ), so floating-point error
+    # can't drop the last break below the data maximum
+    n <- round((end - start) / binwidth)
+    return(start + binwidth * (0:n))
+  }
+
+  # Handle edge case where all values are identical
+  if (range[1] == range[2]) range <- range + c(-0.5, 0.5)
+  seq(range[1], range[2], length.out = bins + 1)
+}
